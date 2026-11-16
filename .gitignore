@@ -1,0 +1,99 @@
+
+# ==========================================
+# RESUMATE - GITIGNORE
+# ==========================================
+
+# VARIABLES DE ENTORNO Y SECRETOS
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# CLAVES Y CERTIFICADOS
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ==========================================
+# FRONTEND - NEXT.JS
+# ==========================================
+
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/dist/
+frontend/coverage/
+frontend/.vercel/
+
+# Logs de npm
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/pnpm-debug.log*
+
+# ==========================================
+# BACKEND - PYTHON / FASTAPI
+# ==========================================
+
+backend/.venv/
+backend/venv/
+backend/env/
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribución y compilación Python
+build/
+dist/
+*.egg-info/
+
+# Testing y cobertura
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Type checking y linting
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+# ==========================================
+# BASE DE DATOS Y ARCHIVOS LOCALES
+# ==========================================
+
+*.sqlite
+*.sqlite3
+*.db
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+*.log
+
+# Documentos generados localmente
+generated/
+uploads/
+temp/
+
+# ==========================================
+# SISTEMA OPERATIVO
+# ==========================================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================================
+# EDITORES
+# ==========================================
+
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
