@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="320" viewBox="0 0 1200 320" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Resumate</title>
+  <desc id="desc">Logo de Resumate: documento con perfil y órbita en degradado azul, cian y violeta, junto al nombre Resumate.</desc>
+  <defs>
+    <linearGradient id="brand" x1="35" y1="40" x2="330" y2="280" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#06B6D4"/>
+      <stop offset="0.48" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <linearGradient id="word" x1="690" y1="90" x2="1110" y2="190" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Isotipo: hoja de CV -->
+  <g transform="rotate(-9 190 158)">
+    <rect x="70" y="32" width="218" height="252" rx="42" stroke="url(#brand)" stroke-width="20"/>
+    <circle cx="178" cy="105" r="27" fill="#3B82F6"/>
+    <path d="M125 180C132 151 151 137 178 137C205 137 224 151 231 180V190H125V180Z" fill="#3B82F6"/>
+    <path d="M126 218H239" stroke="#3B82F6" stroke-width="13" stroke-linecap="round"/>
+    <path d="M126 246H204" stroke="#8B5CF6" stroke-width="13" stroke-linecap="round"/>
+  </g>
+
+  <!-- Órbita dinámica -->
+  <path d="M37 184C78 112 190 83 292 106C339 117 367 140 369 160C372 189 326 218 260 236C178 258 91 252 48 228" stroke="url(#brand)" stroke-width="18" stroke-linecap="round"/>
+  <path d="M48 228C88 245 150 251 208 243" stroke="#06B6D4" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Logotipo -->
+  <text x="420" y="169" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="112" font-weight="750" letter-spacing="-5" fill="#0F172A">Resu</text>
+  <text x="665" y="169" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="112" font-weight="750" letter-spacing="-5" fill="url(#word)">mate</text>
+  <text x="425" y="226" font-family="Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="31" font-weight="450" letter-spacing="1.2" fill="#64748B">Tu carrera, en tus manos.</text>
+</svg>
