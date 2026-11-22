@@ -13,7 +13,6 @@ class JobAnalysisRequest(BaseModel):
     )
     job_url: HttpUrl | None = None
 
-
 class RequirementDetail(BaseModel):
     name: str
     category: Literal[
@@ -25,6 +24,8 @@ class RequirementDetail(BaseModel):
         "programming_language",
         "soft_skill",
         "technical_skill",
+        "language",
+        "experience",
         "other",
     ] = "other"
     importance: Literal[
@@ -34,8 +35,7 @@ class RequirementDetail(BaseModel):
     ]
     requested_level: str | None = None
     evidence: str
-
-
+    
 class ExperienceRequirement(BaseModel):
     area: str | None = None
     min_years: float | None = None

@@ -103,8 +103,42 @@ Para cada requisito completá:
 
 - category:
   Una de las categorías permitidas:
-  technology, framework, database, tool, methodology,
-  programming_language, soft_skill, technical_skill u other.
+
+  technology:
+  Tecnologías generales y conceptos tecnológicos.
+
+  framework:
+  Frameworks y bibliotecas de desarrollo.
+
+  database:
+  Bases de datos y tecnologías de almacenamiento.
+
+  tool:
+  Herramientas de desarrollo y productividad.
+
+  methodology:
+  Metodologías y marcos de trabajo como Scrum, Kanban y Agile.
+
+  programming_language:
+  Lenguajes de programación como Python, Java y TypeScript.
+
+  language:
+  Idiomas humanos como Inglés, Español y Portugués.
+  El nivel solicitado debe registrarse en requested_level.
+
+  experience:
+  Requisitos de experiencia laboral, años mínimos o trayectoria
+  profesional solicitada.
+
+  soft_skill:
+  Habilidades interpersonales como comunicación y liderazgo.
+
+  technical_skill:
+  Competencias técnicas específicas que no correspondan
+  a las categorías anteriores.
+
+  other:
+  Requisitos que no encajen en ninguna categoría anterior.
 
 - importance:
   mandatory, preferred o exclusion.
