@@ -6,6 +6,7 @@ from app.schemas.application import JobAnalysis
 from app.services.job_normalizer import normalize_job_analysis
 
 
+
 SYSTEM_PROMPT = """
 Sos un especialista en selección de personal, recruiting tecnológico
 y análisis estructurado de vacantes laborales.
@@ -218,6 +219,54 @@ identificadas en technology_requirements.
 No agregues tecnologías mencionadas únicamente como ejemplos
 no relacionados con los requisitos del puesto.
 
+--------------------------------------------------
+REGLAS DE EXTRACCIÓN EXHAUSTIVA DE TECNOLOGÍAS
+--------------------------------------------------
+
+1. Revisá todos los requisitos obligatorios y deseables de la descripción.
+
+2. Extraé individualmente cada tecnología, lenguaje, framework,
+   biblioteca, plataforma, herramienta y servicio mencionado.
+
+3. No omitas tecnologías por aparecer dentro de una frase
+   que contenga varias tecnologías.
+
+4. Los requisitos preferred también deben incorporarse
+   a technology_requirements.
+
+5. No limites la extracción a las tecnologías mencionadas
+   en la sección de requisitos obligatorios.
+
+6. Si una tecnología aparece en requirements, verificá si también
+   corresponde incluirla individualmente en technology_requirements.
+
+7. Conservá la misma importancia en ambos campos.
+
+8. No conviertas una tecnología deseable en obligatoria.
+
+9. No incluyas tecnologías que aparezcan únicamente en ejemplos
+   irrelevantes o que no representen requisitos del candidato.
+
+CONTROL OBLIGATORIO ANTES DE RESPONDER:
+
+Compará requirements con technology_requirements.
+
+Verificá que todas las tecnologías identificadas como requisitos
+del candidato estén representadas individualmente en
+technology_requirements, independientemente de su importancia.
+
+En particular, revisá los requisitos que aparecen después de
+expresiones como:
+
+- Se valorará.
+- Será un plus.
+- Deseable.
+- Se considera una ventaja.
+- Se valorarán conocimientos de.
+- Se valorará experiencia con.
+
+No devuelvas el análisis hasta completar esta comprobación.
+
 ==================================================
 6. EXPERIENCIA LABORAL
 ==================================================
@@ -400,6 +449,13 @@ Antes de generar la respuesta verificá:
 11. Que no existan duplicados innecesarios.
 12. Que required_qualifications y preferred_qualifications
     sean coherentes con requirements.
+13. Que todas las tecnologías presentes en requirements y que
+    representen conocimientos o herramientas estén evaluadas
+    para su inclusión individual en technology_requirements.
+14. Que las tecnologías obligatorias y deseables conserven
+    su clasificación de importancia.
+15. Que technologies contenga todos los nombres únicos de
+    technology_requirements.
 
 Devolvé exclusivamente el objeto estructurado solicitado.
 No agregues explicaciones, comentarios ni texto fuera del resultado.
