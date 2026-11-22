@@ -66,6 +66,26 @@ export default function TestProfilePage() {
       >
         Recuperar perfil completo
       </button>
+      <button
+        onClick={async () => {
+          const supabase = createClient();
+          const { data } = await supabase.auth.getSession();
+
+          if (!data.session) {
+            setStatus("No hay una sesión activa.");
+            return;
+          }
+
+          await navigator.clipboard.writeText(
+            data.session.access_token
+          );
+
+          setStatus("Token copiado al portapapeles. No lo compartas.");
+        }}
+        className="ml-3 mt-6 rounded-lg bg-slate-700 px-5 py-3 text-white"
+      >
+        Copiar token para Swagger
+      </button>
 
       <p className="mt-4">{status}</p>
 
