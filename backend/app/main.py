@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.v1.endpoints import health, applications, cv
+from app.api.v1.endpoints import health, applications, cv, profile
 
 app = FastAPI(
     title="Resumate API",
@@ -23,6 +23,7 @@ app.add_middleware(
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(applications.router, prefix="/api/v1", tags=["Applications"])
 app.include_router(cv.router, prefix="/api/v1", tags=["CV"])
+app.include_router(profile.router, prefix="/api/v1", tags=["Profile"])
 
 
 @app.get("/")
