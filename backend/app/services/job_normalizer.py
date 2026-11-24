@@ -247,15 +247,58 @@ def find_technology_category(text: str) -> str:
 # CLASIFICACIÓN DE REQUISITOS
 # ============================================================
 
-
 def infer_requirement_category(name: str) -> str:
     """
-    Determina la categoría de un requisito según su contenido.
-    Utiliza exclusivamente categorías permitidas por Pydantic.
+    Clasifica un requisito según su naturaleza:
+    lenguaje, framework, base de datos, herramienta,
+    metodología, habilidad o experiencia.
     """
     normalized_name = normalize_text(name)
+    padded_name = f" {normalized_name} "
 
-    # Metodologías de trabajo.
+    def contains_any(keywords: set[str]) -> bool:
+        return any(
+            f" {keyword} " in padded_name
+            for keyword in keywords
+        )
+
+    # Formación académica.
+    education_keywords = {
+        "titulo universitario",
+        "titulo de grado",
+        "formacion academica",
+        "estudios universitarios",
+        "estudios avanzados",
+        "carrera universitaria",
+        "licenciatura",
+        "ingenieria",
+        "ingeniero",
+        "ingeniera",
+        "tecnicatura",
+        "tecnico universitario",
+        "grado academico",
+        "ciencias de la computacion",
+        "ingenieria en sistemas",
+    }
+
+    if contains_any(education_keywords):
+        return "education"
+
+    # Certificaciones.
+    certification_keywords = {
+        "certificacion",
+        "certificado profesional",
+        "certificacion profesional",
+        "certificacion tecnica",
+        "certified",
+        "certificate",
+        "certification",
+    }
+
+    if contains_any(certification_keywords):
+        return "certification"
+
+    # Metodologías.
     methodology_keywords = {
         "metodologia agil",
         "metodologias agiles",
@@ -268,30 +311,21 @@ def infer_requirement_category(name: str) -> str:
         "design thinking",
     }
 
-    if any(keyword in normalized_name for keyword in methodology_keywords):
+    if contains_any(methodology_keywords):
         return "methodology"
 
     # Idiomas humanos.
     language_keywords = {
-        "ingles", "english", "espanol", "spanish",
-        "portugues", "portuguese", "frances", "french",
-        "aleman", "german", "italiano", "italian",
+        "ingles", "english",
+        "espanol", "spanish",
+        "portugues", "portuguese",
+        "frances", "french",
+        "aleman", "german",
+        "italiano", "italian",
     }
 
-    if any(keyword in normalized_name for keyword in language_keywords):
+    if contains_any(language_keywords):
         return "language"
-
-    # Experiencia laboral y trayectoria.
-    experience_keywords = {
-        "experiencia",
-        "anos de experiencia",
-        "trayectoria laboral",
-        "experiencia profesional",
-        "experiencia laboral",
-    }
-
-    if any(keyword in normalized_name for keyword in experience_keywords):
-        return "experience"
 
     # Habilidades interpersonales.
     soft_skill_keywords = {
@@ -307,61 +341,151 @@ def infer_requirement_category(name: str) -> str:
         "gestion del tiempo",
     }
 
-    if any(keyword in normalized_name for keyword in soft_skill_keywords):
+    if contains_any(soft_skill_keywords):
         return "soft_skill"
 
-    # Lenguajes de programación: buscar por nombre,
-    # aunque aparezcan dentro de una descripción más extensa.
+    # Lenguajes de programación.
     programming_languages = {
-        "typescript",
         "javascript",
+        "typescript",
         "python",
         "java",
-        "php",
-        "ruby",
         "c++",
         "c#",
+        "golang",
         "go",
+        "php",
+        "ruby",
+        "swift",
+        "kotlin",
+        "rust",
+        "scala",
+        "dart",
+        "r",
     }
 
-    for language in programming_languages:
-        if re.search(rf"(?<!\w){re.escape(language)}(?!\w)", normalized_name):
-            return "programming_language"
+    if contains_any(programming_languages):
+        return "programming_language"
 
-    # Clasificación basada en tecnologías conocidas.
-    technology_category = find_technology_category(normalized_name)
+    # Frameworks y librerías.
+    frameworks = {
+        "react",
+        "next.js",
+        "nextjs",
+        "angular",
+        "vue",
+        "svelte",
+        "django",
+        "flask",
+        "fastapi",
+        "spring",
+        "spring boot",
+        "express",
+        "nestjs",
+        "node.js express",
+        "laravel",
+        "symfony",
+        "asp.net",
+        ".net",
+        "tailwind",
+        "bootstrap",
+    }
 
-    if technology_category == "database":
-        return "database"
-
-    if technology_category == "frontend":
+    if contains_any(frameworks):
         return "framework"
 
-    if technology_category == "backend":
-        if "api" in normalized_name:
-            return "technical_skill"
-        return "programming_language"
+    # Categorías tecnológicas ya conocidas.
+    technology_category = find_technology_category(normalized_name)
 
     if technology_category in REQUIREMENT_CATEGORY_MAP:
         return REQUIREMENT_CATEGORY_MAP[technology_category]
 
-    return "other"
+    # APIs y arquitectura son habilidades técnicas,
+    # no lenguajes ni frameworks.
+    technical_keywords = {
+        "api",
+        "apis",
+        "rest",
+        "restful",
+        "microservicios",
+        "arquitectura de software",
+        "integracion de servicios",
+        "desarrollo backend",
+        "desarrollo frontend",
+    }
 
+    if contains_any(technical_keywords):
+        return "technical_skill"
+
+    # Experiencia laboral.
+    experience_keywords = {
+        "anos de experiencia",
+        "año de experiencia",
+        "años de experiencia",
+        "experiencia laboral",
+        "experiencia profesional",
+        "trayectoria laboral",
+        "experiencia general",
+        "experiencia en desarrollo de software",
+    }
+
+    if contains_any(experience_keywords):
+        return "experience"
+
+    return "other"
 
 # ============================================================
 # NORMALIZACIÓN DE NIVELES
 # ============================================================
 
-def normalize_requested_level(level: str | None) -> str | None:
+
+def normalize_requested_level(
+    level: str | None,
+    text: str | None = None,
+) -> str | None:
     """
-    Normaliza los niveles de experiencia solicitados.
+    Normaliza el nivel solicitado.
+    Si no recibe un nivel, intenta recuperarlo del texto del requisito.
     """
-    if not level:
+    if level:
+        normalized = normalize_text(level)
+        return LEVEL_ALIASES.get(normalized, normalized)
+
+    if not text:
         return None
 
-    normalized = normalize_text(level)
+    normalized_text = normalize_text(text)
 
-    return LEVEL_ALIASES.get(normalized, normalized)
+    level_keywords = {
+        "advanced": [
+            "avanzado",
+            "avanzada",
+            "advanced",
+            "experto",
+            "experta",
+            "expert",
+        ],
+        "intermediate": [
+            "intermedio",
+            "intermedia",
+            "intermediate",
+            "mid level",
+        ],
+        "beginner": [
+            "basico",
+            "basica",
+            "principiante",
+            "beginner",
+            "junior",
+        ],
+    }
+
+    for level_name, keywords in level_keywords.items():
+        if any(keyword in normalized_text for keyword in keywords):
+            return level_name
+
+    return None
+
 
 
 # ============================================================
@@ -425,21 +549,19 @@ def extract_technologies_from_requirements(
 # NORMALIZACIÓN PRINCIPAL
 # ============================================================
 
+
 def normalize_job_analysis(analysis: JobAnalysis) -> JobAnalysis:
     """
     Normaliza y completa el análisis de una vacante.
 
-    Responsabilidades:
-    1. Recuperar tecnologías omitidas.
-    2. Normalizar categorías y niveles tecnológicos.
-    3. Clasificar requisitos.
-    4. Reconstruir listas derivadas.
+    Conserva las estructuras especializadas y evita sobrescribir
+    categorías válidas con clasificaciones incorrectas.
     """
 
     # 1. Recuperar tecnologías omitidas.
     extract_technologies_from_requirements(analysis)
 
-    # 2. Normalizar technology_requirements.
+    # 2. Normalizar tecnologías.
     for technology in analysis.technology_requirements:
         inferred_category = infer_technology_category(
             technology.name
@@ -449,47 +571,65 @@ def normalize_job_analysis(analysis: JobAnalysis) -> JobAnalysis:
             technology.category = inferred_category
 
         technology.requested_level = normalize_requested_level(
-            technology.requested_level
+            technology.requested_level,
+            technology.evidence,
         )
 
-    # 3. Normalizar requirements.
+    # 3. Normalizar requisitos generales.
     for requirement in analysis.requirements:
-        requirement.category = infer_requirement_category(
+        inferred_category = infer_requirement_category(
             requirement.name
         )
 
+        # Solo reemplazar la categoría cuando la inferencia
+        # sea concreta. Así no perdemos education/certification
+        # ni otras categorías válidas del modelo.
+        if inferred_category != "other":
+            requirement.category = inferred_category
+
         requirement.requested_level = normalize_requested_level(
-            requirement.requested_level
+            requirement.requested_level,
+            f"{requirement.name} {requirement.evidence}",
         )
 
     # 4. Reconstruir required_qualifications.
-    analysis.required_qualifications = [
-        requirement.name
-        for requirement in analysis.requirements
-        if requirement.importance == "mandatory"
-    ]
+    analysis.required_qualifications = list(
+        dict.fromkeys(
+            requirement.name
+            for requirement in analysis.requirements
+            if requirement.importance == "mandatory"
+        )
+    )
 
     # 5. Reconstruir preferred_qualifications.
-    analysis.preferred_qualifications = [
-        requirement.name
-        for requirement in analysis.requirements
-        if requirement.importance == "preferred"
-    ]
-
-    # 6. Reconstruir technologies.
-    analysis.technologies = list(
+    analysis.preferred_qualifications = list(
         dict.fromkeys(
-            technology.name
-            for technology in analysis.technology_requirements
+            requirement.name
+            for requirement in analysis.requirements
+            if requirement.importance == "preferred"
         )
     )
 
-    # 7. Reconstruir languages.
-    analysis.languages = list(
-        dict.fromkeys(
-            language.language
-            for language in analysis.language_requirements
-        )
-    )
+    # 6. Reconstruir technologies sin duplicados.
+    unique_technologies = {}
+
+    for technology in analysis.technology_requirements:
+        normalized_name = normalize_text(technology.name)
+
+        if normalized_name and normalized_name not in unique_technologies:
+            unique_technologies[normalized_name] = technology.name
+
+    analysis.technologies = list(unique_technologies.values())
+
+    # 7. Reconstruir languages sin duplicados.
+    unique_languages = {}
+
+    for language in analysis.language_requirements:
+        normalized_name = normalize_text(language.language)
+
+        if normalized_name and normalized_name not in unique_languages:
+            unique_languages[normalized_name] = language.language
+
+    analysis.languages = list(unique_languages.values())
 
     return analysis

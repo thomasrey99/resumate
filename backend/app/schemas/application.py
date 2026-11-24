@@ -13,6 +13,7 @@ class JobAnalysisRequest(BaseModel):
     )
     job_url: HttpUrl | None = None
 
+
 class RequirementDetail(BaseModel):
     name: str
     category: Literal[
@@ -26,6 +27,8 @@ class RequirementDetail(BaseModel):
         "technical_skill",
         "language",
         "experience",
+        "education",
+        "certification",
         "other",
     ] = "other"
     importance: Literal[
@@ -35,7 +38,8 @@ class RequirementDetail(BaseModel):
     ]
     requested_level: str | None = None
     evidence: str
-    
+
+
 class ExperienceRequirement(BaseModel):
     area: str | None = None
     min_years: float | None = None
@@ -50,6 +54,11 @@ class LanguageRequirement(BaseModel):
     cefr_level: Literal[
         "A1", "A2", "B1", "B2", "C1", "C2", "Native"
     ] | None = None
+    importance: Literal[
+        "mandatory",
+        "preferred",
+        "exclusion",
+    ] = "mandatory"
     evidence: str
 
 
@@ -76,6 +85,41 @@ class TechnologyRequirement(BaseModel):
     evidence: str
 
 
+class EducationRequirement(BaseModel):
+    qualification: str | None = None
+    field_of_study: str | None = None
+    importance: Literal[
+        "mandatory",
+        "preferred",
+        "exclusion",
+    ] = "preferred"
+    evidence: str
+
+
+class CertificationRequirement(BaseModel):
+    name: str
+    importance: Literal[
+        "mandatory",
+        "preferred",
+        "exclusion",
+    ] = "preferred"
+    evidence: str
+
+
+class ExclusionRequirement(BaseModel):
+    category: Literal[
+        "language",
+        "location",
+        "availability",
+        "experience",
+        "education",
+        "certification",
+        "other",
+    ] = "other"
+    description: str
+    evidence: str
+
+
 class JobAnalysis(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
@@ -84,6 +128,7 @@ class JobAnalysis(BaseModel):
     company: str | None = None
     location: str | None = None
     employment_type: str | None = None
+    work_mode: Literal["remote", "hybrid", "on_site"] | None = None
     seniority: str | None = None
     summary: str
 
@@ -101,13 +146,28 @@ class JobAnalysis(BaseModel):
         default_factory=list
     )
 
-    # Experiencia e idiomas
+    # Experiencia
     experience_requirements: list[ExperienceRequirement] = Field(
         default_factory=list
     )
     years_experience_min: float | None = None
     years_experience_max: float | None = None
+
+    # Idiomas
     language_requirements: list[LanguageRequirement] = Field(
         default_factory=list
     )
     languages: list[str] = Field(default_factory=list)
+
+    # Formación y certificaciones
+    education_requirements: list[EducationRequirement] = Field(
+        default_factory=list
+    )
+    certification_requirements: list[CertificationRequirement] = Field(
+        default_factory=list
+    )
+
+    # Condiciones excluyentes
+    exclusion_requirements: list[ExclusionRequirement] = Field(
+        default_factory=list
+    )
